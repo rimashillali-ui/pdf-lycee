@@ -1,20 +1,30 @@
 name: Transfert vers Backblaze B2
 
 on:
-  workflow_dispatch: # Permet de lancer le transfert manuellement d'un simple clic
+  workflow_dispatch: # Déclenchement manuel en un clic
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # Étape 1 : Récupérer les fichiers du dépôt GitHub
     - name: Recuperer le code de Github
       uses: actions/checkout@v4
 
-    - name: Synchronisation vers Backblaze
-      uses: jakejarvis/backblaze-b2-action@master # Version stable corrigée
-      env:
-        B2_APPKEY_ID: ${{ secrets.B2_KEY_ID }}
-        B2_APPKEY: ${{ secrets.B2_APPLICATION_KEY }}
-        B2_BUCKET: ${{ secrets.B2_BUCKET_NAME }}
-        SOURCE_DIR: './devoirs_physique_decoupes'
+    # Étape 2 : Installer l'outil officiel Backblaze B2 CLI
+    - name: Installer Backblaze B2 CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3-pip
+        pip3 install b2
+
+    # Étape 3 : Connecter le terminal à votre compte Backblaze B2
+    - name: Authentification Backblaze
+      run: |
+        b2 authorize-account "${{ secrets.B2_KEY_ID }}" "${{ secrets.B2_APPLICATION_KEY }}"
+
+    # Étape 4 : Synchroniser le dossier vers le bucket
+    - name: Synchronisation du dossier
+      run: |
+        b2 sync ./devoirs_physique_decoupes "b2://${{ secrets.B2_BUCKET_NAME }}"
