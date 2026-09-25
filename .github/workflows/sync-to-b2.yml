@@ -14,7 +14,7 @@ jobs:
     - name: Synchronisation vers Backblaze
       uses: jakejarvis/backblaze-b2-action@master # Version stable corrigée
       env:
-        B2_APPLICATION_KEY_ID: ${{ secrets.B2_KEY_ID }}
+        B2_APPKEY_ID: ${{ secrets.B2_KEY_ID }}
         B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
         B2_BUCKET: ${{ secrets.B2_BUCKET_NAME }}
         SOURCE_DIR: './devoirs_physique_decoupes'
