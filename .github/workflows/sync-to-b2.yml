@@ -1,0 +1,20 @@
+name: Transfert vers Backblaze B2
+
+on:
+  workflow_dispatch: # Permet de lancer le transfert manuellement d'un simple clic
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Recuperer le code de Github
+      uses: actions/checkout@v4
+
+    - name: Synchronisation vers Backblaze
+      uses: jakejarvis/backblaze-b2-action@v0.5.0
+      env:
+        B2_APPLICATION_KEY_ID: ${{ secrets.B2_KEY_ID }}
+        B2_APPLICATION_KEY: ${{ secrets.B2_APPLICATION_KEY }}
+        B2_BUCKET_NAME: ${{ secrets.B2_BUCKET_NAME }}
+        SOURCE_DIR: './devoirs_physique_decoupes' # Votre dossier cible
